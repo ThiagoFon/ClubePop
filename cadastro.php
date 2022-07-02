@@ -1,11 +1,10 @@
 <?php
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
+// Biblioteca para enviar email
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-//Load Composer's autoloader
+// Carrega autoloader do Composer
 require 'PHPMailer/vendor/autoload.php';
 
 require_once('conexao.php');
@@ -21,24 +20,24 @@ $bairro = $_POST['txt_bairro'];
 $cidade = $_POST['txt_cidade'];
 $estado = $_POST['txt_estado'];
 
-$sql_cadastro = mysqli_query($ligar, "INSERT INTO `$db_name` (`cpf`, `nome`, `fone`, `email`, `cep`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`)
+$sql_cadastro = mysqli_query($ligar, "INSERT INTO `$tbl_name` (`cpf`, `nome`, `fone`, `email`, `cep`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`)
 VALUES ('$cpf', '$nomeCompleto', '$telefone', '$email', '$cep', '$logradouro', '$numero', '$bairro', '$cidade', '$estado');");
 
 if($sql_cadastro == true)
 {    
-   //Create an instance; passing `true` enables exceptions
+   // Cria uma instancia; passando `true` habilita excecoes
    $mail = new PHPMailer(true);
 
    try
    {
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.office365.com';                     //Set the SMTP server to send through
+    // Configuracao do Server
+    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.office365.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'projeto.mais.sistemas@outlook.com';                     //SMTP username
-    $mail->Password   = '@maissistemas1nteligentes';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+    $mail->Username   = 'projeto.mais.sistemas@outlook.com';
+    $mail->Password   = '@maissistemas1nteligentes';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
 
     $mail->setFrom('projeto.mais.sistemas@outlook.com', 'Thiago Daniel');
@@ -46,34 +45,34 @@ if($sql_cadastro == true)
     $mail->addReplyTo('projeto.mais.sistemas@outlook.com', 'Thiago Daniel');
 
    
-    //Content
-    $mail->isHTML(true);                                  //Set email format to HTML
+    //Conteudo
+    $mail->isHTML(true);
     $mail->CharSet = "UTF-8";
     $mail->Subject = 'Clube POP - Ativação de Cadastro';
     $message = "<i>Estamos muito felizes pelo seu interesse em usar nosso cartão, agora falta pouco. Basta você clicar no link abaixo e confirmar os seus dados cadastrais.</i>";
-    $message .= "<br><br><a href='localhost/ClubePop/ativacao.html?id=$cpf'>Link para ativação de seu cartão</a>";
+    $message .= "<br><br><a href='http://localhost/ClubePop/ativacao_vis.php?id=$cpf'>Link para ativação de seu cartão</a>";
     $mail->Body    = "$message";
 
     $mail->send();
 
     echo "  <script>
-                alert('Cadastro realizado com sucesso.');
-                window.location.href='index.html';
+               alert('Cadastro realizado com sucesso.');
+               window.location.href='index.html';
             </script>
          ";
     
    }
    catch (Exception $e)
    {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    echo "Mensagem não pode ser enviada. Mailer Error: {$mail->ErrorInfo}";
    }
 }
 else
 {
-    echo " <script>
-              alert('Falha ao cadastrar.');
-              window.location.href='index.html';
-           </script>
+    echo "  <script>
+               alert('Falha ao cadastrar.');
+               window.location.href='index.html';
+            </script>
     ";
 }
 
