@@ -26,5 +26,7 @@ CREATE TABLE `usuarios` (
 ou 
 
 Importar o arquivo de banco de dados disponibilizado pelo email.
+
 7. Fazer o clone do repositorio na pasta wamp64/www
+
 8. Abrir o navegador e digitar localhost/ClubePop.
